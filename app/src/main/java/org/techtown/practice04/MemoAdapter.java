@@ -39,8 +39,12 @@ public class MemoAdapter extends BaseAdapter {
         view.setTitle(item.getTitle());
         view.setDate(item.getDate());
 
-        if(!item.getRECORD_FILE().equals("null")) {
+        if(!item.getAUDIO_FILE().equals("null")) {
             view.setRecordAlpha(1);
+        }
+
+        if(!item.getVIDEO_FILE().equals("null")) {
+            view.setVideoAlpha(1);
         }
 
         return view;

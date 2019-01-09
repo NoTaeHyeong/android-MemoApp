@@ -5,19 +5,29 @@ public class WriteMemoItem {
     private String title;
     private String date;
     private String AUDIO_FILE;
+    private String VIDEO_FILE;
 
-    public WriteMemoItem(int id, String title, String date, String AUDIO_FILE) {
+    public WriteMemoItem(int id, String title, String date, String AUDIO_FILE, String VIDEO_FILE) {
         this.id = id;
         this.title = title;
         this.date = date;
         this.AUDIO_FILE = AUDIO_FILE;
+        this.VIDEO_FILE = VIDEO_FILE;
     }
 
-    public String getRECORD_FILE() {
+    public String getVIDEO_FILE() {
+        return VIDEO_FILE;
+    }
+
+    public void setVIDEO_FILE(String VIDEO_FILE) {
+        this.VIDEO_FILE = VIDEO_FILE;
+    }
+
+    public String getAUDIO_FILE() {
         return AUDIO_FILE;
     }
 
-    public void setRECORD_FILE(String RECORD_FILE) {
+    public void setAUDIO_FILE(String RECORD_FILE) {
         this.AUDIO_FILE = RECORD_FILE;
     }
 

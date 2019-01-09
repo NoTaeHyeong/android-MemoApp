@@ -9,9 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +34,15 @@ public class UpdateDelete extends Fragment {
     String title, date, content;
     int id;
 
-    MediaPlayer player;
-    String AUDIO_FILE;
+    MediaPlayer audioPlayer, videoPlayer;
+    String AUDIO_FILE, VIDEO_FILE;
 
     SQLiteDatabase db;
     TextView titleView, dateView, contentView;
-    Button update, delete, recordPlay;
+    Button update, delete, recordPlay, videoPlay;
+    FrameLayout videoView;
+    SurfaceView surface;
+    SurfaceHolder holder; // 미리보기 클래스
 
     public void setDB(SQLiteDatabase db) {
         this.db = db;
@@ -74,15 +80,26 @@ public class UpdateDelete extends Fragment {
         dateView = rootView.findViewById(R.id.dateView);
         contentView = rootView.findViewById(R.id.contentView);
 
+        // 미리보기 클래스 추가
+        surface = new SurfaceView(getContext().getApplicationContext());
+        holder = surface.getHolder();
+        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        // 레이아웃에 미리보기 view 추가
+        videoView = rootView.findViewById(R.id.videoLayout);
+        videoView.addView(surface);
+
         getItemView();
 
         update = rootView.findViewById(R.id.update);
         delete = rootView.findViewById(R.id.delete);
         recordPlay = rootView.findViewById(R.id.recordPlay);
+        videoPlay = rootView.findViewById(R.id.videoPlay);
 
         update.setOnClickListener(new UpdateEvent());
         delete.setOnClickListener(new DeleteEvent());
         recordPlay.setOnClickListener(new RecordPlayEvent());
+        videoPlay.setOnClickListener(new VideoPlayEvent());
 
         return rootView;
     }
@@ -104,27 +121,45 @@ public class UpdateDelete extends Fragment {
     class RecordPlayEvent implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            if (player != null) { // 재생중이면
-                player.stop();
-                player.release();
-                player = null;
+            if (audioPlayer != null) { // 재생중이면
+                audioPlayer.stop();
+                audioPlayer.release();
+                audioPlayer = null;
             }
 
             Toast.makeText(getContext().getApplicationContext(), "녹음파일을 재생합니다.", Toast.LENGTH_SHORT).show();
-            player = new MediaPlayer();
+            audioPlayer = new MediaPlayer();
 
             try {
-                player.setDataSource(AUDIO_FILE);
-                player.prepare(); // 가지고 와서
-                player.start();
+                audioPlayer.setDataSource(AUDIO_FILE);
+                audioPlayer.prepare(); // 가지고 와서
+                audioPlayer.start();
             } catch (IOException e) {
                 Toast.makeText(getContext().getApplicationContext(), "에러 : 재생파일이 없습니다."+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    class VideoPlayEvent implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if(videoPlayer == null) {
+                videoPlayer = new MediaPlayer();
+
+                try {
+                    videoPlayer.setDataSource(VIDEO_FILE);
+                    videoPlayer.setDisplay(holder);
+                    videoPlayer.prepare();
+                    videoPlayer.start();
+                } catch (IOException e) {
+                    Toast.makeText(getContext().getApplicationContext(), "재생할 파일 오류 발생:"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
     public void getItemView() {
-        Cursor c1 = db.rawQuery("select title, date, content, audiofile from " + TABLE_NAME + " Where id = " + id, null);
+        Cursor c1 = db.rawQuery("select title, date, content, audiofile, videofile from " + TABLE_NAME + " Where id = " + id, null);
 
         c1.moveToNext();
 
@@ -132,10 +167,17 @@ public class UpdateDelete extends Fragment {
         date = c1.getString(1);
         content = c1.getString(2);
         AUDIO_FILE = c1.getString(3);
+        VIDEO_FILE = c1.getString(4);
 
         titleView.setText(title);
         dateView.setText(date);
         contentView.setText(content);
+
+        Log.d("UpdateDelete", "-=====>" + VIDEO_FILE);
+
+        if(!VIDEO_FILE.equals("null")) {
+            videoView.setVisibility(View.VISIBLE);
+        }
 
         c1.close();
     }

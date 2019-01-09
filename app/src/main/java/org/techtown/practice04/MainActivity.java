@@ -44,17 +44,18 @@ public class MainActivity extends AppCompatActivity {
         setDB(startView.db);
     }
 
-    public void insert(String title, String date, String content, String audiofile) {
+    public void insert(String title, String date, String content, String audiofile, String videofile) {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, startView).commit();
 
-        db.execSQL("insert into " + TABLE_NAME + " (title, date, content, audiofile) values('"+title+"', '"+date+"', '"+content+"', '"+audiofile+"')");
+        db.execSQL("insert into " + TABLE_NAME + " " +
+                "(title, date, content, audiofile, videofile) values('"+title+"', '"+date+"', '"+content+"', '"+audiofile+"', '"+videofile+"')");
     }
 
-    public void update(int id, String title, String date, String content, String audiofile) {
+    public void update(int id, String title, String date, String content, String audiofile, String videofile) {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, startView).commit();
 
         db.execSQL("update " + TABLE_NAME + " " +
-                "set title = '"+title+"', date = '"+date+"', content = '"+content+"', audiofile = '"+audiofile+"' " +
+                "set title = '"+title+"', date = '"+date+"', content = '"+content+"', audiofile = '"+audiofile+"', videofile = '"+videofile+"' " +
                 "Where id = " + id);
     }
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class WriteMemoItemView extends RelativeLayout {
     TextView titleView, dateView;
-    ImageView picture, video, record;
+    ImageView record, video, picture;
 
     public WriteMemoItemView(Context context) {
         super(context);
@@ -25,6 +25,7 @@ public class WriteMemoItemView extends RelativeLayout {
         titleView = (TextView) findViewById(R.id.titleView);
         dateView = (TextView) findViewById(R.id.dateView);
         record = findViewById(R.id.record);
+        video = findViewById(R.id.video);
     }
 
     public void setTitle(String title) {
@@ -36,5 +37,7 @@ public class WriteMemoItemView extends RelativeLayout {
     }
 
     public void setRecordAlpha(float alpha) { record.setAlpha(alpha); }
+
+    public void setVideoAlpha(float alpha) { video.setAlpha(alpha); }
 
 }

@@ -22,7 +22,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         CREATE_SQL += " title text, ";
         CREATE_SQL += " date text, ";
         CREATE_SQL += " content text, ";
-        CREATE_SQL += " audiofile text) ";
+        CREATE_SQL += " audiofile text, ";
+        CREATE_SQL += " videofile text) ";
 
         try {
             db.execSQL(CREATE_SQL);

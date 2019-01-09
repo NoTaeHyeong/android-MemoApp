@@ -17,12 +17,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.List;
 
 public class StartView extends Fragment {
 
     private String TABLE_NAME = "employee";
-    private String DATABASE = "MemoView.db";
+    private String DATABASE = "Fu.db";
 
     ListView listView;
     MemoAdapter adapter;
@@ -31,7 +32,7 @@ public class StartView extends Fragment {
     SQLiteDatabase db;
 
     Button newMemo;
-    String title, date, AUDIO_FILE;
+    String title, date, AUDIO_FILE, VIDEO_FILE;
     int id;
 
     @Nullable
@@ -40,6 +41,10 @@ public class StartView extends Fragment {
         if(db == null) {
             openDatabase();
         }
+
+        Date date = new Date();
+
+        Log.d("StartView", date.toString());
 
         View rootView = (View) inflater.inflate(R.layout.startview, container, false);
 
@@ -73,7 +78,7 @@ public class StartView extends Fragment {
     }
 
     public void Select() {
-        Cursor c1 = db.rawQuery("select id, title, date, audiofile from " + TABLE_NAME, null);
+        Cursor c1 = db.rawQuery("select id, title, date, audiofile, videofile from " + TABLE_NAME, null);
         int rowCnt = c1.getCount();
 
         for(int i=0; i<rowCnt; i++) {
@@ -83,10 +88,9 @@ public class StartView extends Fragment {
             title = c1.getString(1);
             date = c1.getString(2);
             AUDIO_FILE = c1.getString(3);
+            VIDEO_FILE = c1.getString(4);
 
-            Log.d("StartView", "------>" + AUDIO_FILE);
-
-            adapter.addItem(new WriteMemoItem(id, title, date, AUDIO_FILE));
+            adapter.addItem(new WriteMemoItem(id, title, date, AUDIO_FILE, VIDEO_FILE));
         }
 
         c1.close();

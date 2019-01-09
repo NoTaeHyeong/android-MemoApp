@@ -25,7 +25,7 @@
 
     <TextView
         android:id="@+id/contentView"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="300dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/dateView"
@@ -60,4 +60,22 @@
         android:layout_marginBottom="83dp"
         android:layout_marginStart="27dp"
         android:text="음성확인" />
+
+    <Button
+        android:id="@+id/videoPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/recordPlay"
+        android:layout_centerHorizontal="true"
+        android:text="영상확인" />
+
+    <FrameLayout
+        android:id="@+id/videoLayout"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/dateView"
+        android:visibility="invisible"
+        android:layout_toEndOf="@+id/contentView">
+
+    </FrameLayout>
 </RelativeLayout>
