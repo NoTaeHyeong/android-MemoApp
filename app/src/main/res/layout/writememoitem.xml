@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ecf184">
+
+    <ImageView
+        android:id="@+id/picture"
+        android:layout_width="100dp"
+        android:layout_height="130dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/picture"
+        />
+
+    <ImageView
+        android:id="@+id/video"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="15dp"
+        android:layout_alignBottom="@+id/picture"
+        android:layout_below="@+id/dateView"
+        android:layout_marginEnd="5dp"
+        android:alpha="0.5"
+        android:src="@drawable/video"/>
+
+    <ImageView
+        android:id="@+id/record"
+        android:layout_width="50dp"
+        android:layout_height="65dp"
+        android:layout_alignBottom="@+id/picture"
+        android:layout_alignTop="@+id/video"
+        android:layout_toEndOf="@+id/video"
+        android:alpha="0.5"
+        android:src="@drawable/record" />
+
+    <TextView
+        android:id="@+id/dateView"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:text="날짜"
+        android:textColor="#3f761f"
+        android:layout_below="@+id/titleView"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/titleView"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="제목"
+        android:textColor="@color/colorAccent"
+        android:textSize="24dp"
+        android:textStyle="bold" />
+</RelativeLayout>
