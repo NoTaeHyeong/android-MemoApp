@@ -1,18 +1,28 @@
 package org.techtown.practice04;
 
-public class WriteMemoItem {
+public class MemoItem {
     private int id;
     private String title;
     private String date;
     private String AUDIO_FILE;
     private String VIDEO_FILE;
+    private String PHOTO_FILE;
 
-    public WriteMemoItem(int id, String title, String date, String AUDIO_FILE, String VIDEO_FILE) {
+    public MemoItem(int id, String title, String date, String AUDIO_FILE, String VIDEO_FILE, String PHOTO_FILE) {
         this.id = id;
         this.title = title;
         this.date = date;
         this.AUDIO_FILE = AUDIO_FILE;
         this.VIDEO_FILE = VIDEO_FILE;
+        this.PHOTO_FILE = PHOTO_FILE;
+    }
+
+    public String getPHOTO_FILE() {
+        return PHOTO_FILE;
+    }
+
+    public void setPHOTO_FILE(String PHOTO_FILE) {
+        this.PHOTO_FILE = PHOTO_FILE;
     }
 
     public String getVIDEO_FILE() {

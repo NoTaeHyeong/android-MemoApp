@@ -3,6 +3,8 @@ package org.techtown.practice04;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,7 @@ import java.io.IOException;
 public class UpdateDelete extends Fragment {
 
     MainActivity activity;
+    SQLiteDatabase db;
 
     private static final String ARG_ID = "id";
     private String TABLE_NAME = "employee";
@@ -35,14 +39,16 @@ public class UpdateDelete extends Fragment {
     int id;
 
     MediaPlayer audioPlayer, videoPlayer;
-    String AUDIO_FILE, VIDEO_FILE;
+    String AUDIO_FILE, VIDEO_FILE, PHOTO_FILE;
 
-    SQLiteDatabase db;
     TextView titleView, dateView, contentView;
+
     Button update, delete, recordPlay, videoPlay;
     FrameLayout videoView;
     SurfaceView surface;
     SurfaceHolder holder; // 미리보기 클래스
+
+    ImageView photo;
 
     public void setDB(SQLiteDatabase db) {
         this.db = db;
@@ -79,6 +85,7 @@ public class UpdateDelete extends Fragment {
         titleView = rootView.findViewById(R.id.titleView);
         dateView = rootView.findViewById(R.id.dateView);
         contentView = rootView.findViewById(R.id.contentView);
+        photo = rootView.findViewById(R.id.photo);
 
         // 미리보기 클래스 추가
         surface = new SurfaceView(getContext().getApplicationContext());
@@ -159,7 +166,7 @@ public class UpdateDelete extends Fragment {
     }
 
     public void getItemView() {
-        Cursor c1 = db.rawQuery("select title, date, content, audiofile, videofile from " + TABLE_NAME + " Where id = " + id, null);
+        Cursor c1 = db.rawQuery("select title, date, content, audiofile, videofile, photofile from " + TABLE_NAME + " Where id = " + id, null);
 
         c1.moveToNext();
 
@@ -168,15 +175,22 @@ public class UpdateDelete extends Fragment {
         content = c1.getString(2);
         AUDIO_FILE = c1.getString(3);
         VIDEO_FILE = c1.getString(4);
+        PHOTO_FILE = c1.getString(5);
 
         titleView.setText(title);
         dateView.setText(date);
         contentView.setText(content);
 
-        Log.d("UpdateDelete", "-=====>" + VIDEO_FILE);
-
         if(!VIDEO_FILE.equals("null")) {
             videoView.setVisibility(View.VISIBLE);
+        }
+
+        if(!PHOTO_FILE.equals("null")) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 0; // 대용량 사이즈 줄임
+
+            Bitmap bitmap = BitmapFactory.decodeFile(PHOTO_FILE, options);
+            photo.setImageBitmap(bitmap);
         }
 
         c1.close();

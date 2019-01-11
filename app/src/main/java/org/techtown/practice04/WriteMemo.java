@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -25,6 +27,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -42,15 +45,20 @@ public class WriteMemo extends Fragment {
 
     MainActivity activity;
     Context context;
-
     SQLiteDatabase db;
-    EditText title, content, recordName, videoName;
+
+    EditText title, content, recordName, videoName, photoName;
+
     Button restore;
+
     Button record, recordStop, recordPlay;
     Button video, videoStop, videoPlay;
+    Button photo;
+    ImageView getPhoto;
+    File file; // 사진 file 경로
 
     String getTitle, getContent, getDate;
-    String AUDIO_FILE, VIDEO_FILE;
+    String AUDIO_FILE, VIDEO_FILE, PHOTO_FILE;
     String video_path;
 
     MediaPlayer player;
@@ -98,6 +106,8 @@ public class WriteMemo extends Fragment {
 
         recordName = rootView.findViewById(R.id.recordName);
         videoName = rootView.findViewById(R.id.videoName);
+        photoName = rootView.findViewById(R.id.photoName);
+        getPhoto = rootView.findViewById(R.id.getPhoto);
 
         if(id != 0) {
             updateView();
@@ -122,6 +132,9 @@ public class WriteMemo extends Fragment {
         videoStop.setOnClickListener(new VideoStopEvent());
         videoPlay.setOnClickListener(new VideoPlayEvent());
 
+        photo = rootView.findViewById(R.id.photo);
+        photo.setOnClickListener(new PhotoEvent());
+
         // 미리보기 클래스 추가
         surface = new SurfaceView(context);
         holder = surface.getHolder();
@@ -130,8 +143,6 @@ public class WriteMemo extends Fragment {
         // 레이아웃에 미리보기 view 추가
         frame = (FrameLayout) rootView.findViewById(R.id.videoLayout);
         frame.addView(surface);
-
-        frame.setVisibility(View.VISIBLE);
 
         return rootView;
     }
@@ -144,15 +155,12 @@ public class WriteMemo extends Fragment {
             setDate();
 
             if(id == 0) { // 새 메모 작성 시
-                activity.insert(getTitle, getDate, getContent, AUDIO_FILE, VIDEO_FILE);
+                activity.insert(getTitle, getDate, getContent, AUDIO_FILE, VIDEO_FILE, PHOTO_FILE);
             } else {
-                activity.update(id, getTitle, getDate, getContent, AUDIO_FILE, VIDEO_FILE);
+                activity.update(id, getTitle, getDate, getContent, AUDIO_FILE, VIDEO_FILE, PHOTO_FILE);
             }
 
-            title.setText("");
-            content.setText("");
-            recordName.setText("");
-            videoName.setText("");
+            textInit();
         }
     }
 
@@ -237,6 +245,7 @@ public class WriteMemo extends Fragment {
             if(getVideoName.equals("")) {
                 Toast.makeText(context, "녹화명을 입력하세요.", Toast.LENGTH_LONG).show();
             } else {
+                frame.setVisibility(View.VISIBLE);
                 // 외부 저장 공간 ( 따로 추가한 메모리 )
                 String state = Environment.getExternalStorageState();
                 if(!state.equals(Environment.MEDIA_MOUNTED)) {
@@ -331,6 +340,27 @@ public class WriteMemo extends Fragment {
         }
     }
 
+    class PhotoEvent implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            String photo_Name = photoName.getText().toString();
+
+            if(photo_Name.equals("")) {
+                Toast.makeText(context, "사진명을 입력하세요.", Toast.LENGTH_LONG).show();
+            } else {
+                File storageDir = Environment.getExternalStorageDirectory();
+                file = new File(storageDir, photo_Name);
+
+                PHOTO_FILE = file.getAbsolutePath();
+
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+
+                startActivityForResult(intent, 100); // 실행 후 결과, 자동 onActivityResult() 호출됨
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -345,15 +375,40 @@ public class WriteMemo extends Fragment {
     }
 
     public void updateView() {
-        Cursor c1 = db.rawQuery("select title, content, audiofile, videofile from " + TABLE_NAME + " Where id = " + id, null);
+        Cursor c1 = db.rawQuery("select title, content, audiofile, videofile, photofile from " + TABLE_NAME + " Where id = " + id, null);
         c1.moveToNext();
 
         title.setText(c1.getString(0));
         content.setText(c1.getString(1));
         AUDIO_FILE = c1.getString(2);
         VIDEO_FILE = c1.getString(3);
+        PHOTO_FILE = c1.getString(4);
 
         c1.close();
     }
 
+    public void textInit() {
+        title.setText("");
+        content.setText("");
+        recordName.setText("");
+        videoName.setText("");
+        photoName.setText("");
+
+        AUDIO_FILE = "null";
+        VIDEO_FILE = "null";
+        PHOTO_FILE = "null";
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 100 && resultCode == -1) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 0; // 대용량 사이즈 줄임
+
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+            getPhoto.setImageBitmap(bitmap);
+        }
+    }
 }

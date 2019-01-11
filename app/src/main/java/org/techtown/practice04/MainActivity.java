@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,18 +45,19 @@ public class MainActivity extends AppCompatActivity {
         setDB(startView.db);
     }
 
-    public void insert(String title, String date, String content, String audiofile, String videofile) {
+    public void insert(String title, String date, String content, String audiofile, String videofile, String photofile) {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, startView).commit();
 
         db.execSQL("insert into " + TABLE_NAME + " " +
-                "(title, date, content, audiofile, videofile) values('"+title+"', '"+date+"', '"+content+"', '"+audiofile+"', '"+videofile+"')");
+                "(title, date, content, audiofile, videofile, photofile) " +
+                "values('"+title+"', '"+date+"', '"+content+"', '"+audiofile+"', '"+videofile+"', '"+photofile+"')");
     }
 
-    public void update(int id, String title, String date, String content, String audiofile, String videofile) {
+    public void update(int id, String title, String date, String content, String audiofile, String videofile, String photofile) {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, startView).commit();
 
         db.execSQL("update " + TABLE_NAME + " " +
-                "set title = '"+title+"', date = '"+date+"', content = '"+content+"', audiofile = '"+audiofile+"', videofile = '"+videofile+"' " +
+                "set title = '"+title+"', date = '"+date+"', content = '"+content+"', audiofile = '"+audiofile+"', videofile = '"+videofile+"', photofile = '"+photofile+"' " +
                 "Where id = " + id);
     }
 

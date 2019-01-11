@@ -8,8 +8,9 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 
 public class MemoAdapter extends BaseAdapter {
-    ArrayList<WriteMemoItem> items = new ArrayList<>();
+    ArrayList<MemoItem> items = new ArrayList<>();
     String title, date;
+    String PHOTO_fILE;
     Context context;
 
     public MemoAdapter(Context context) {
@@ -33,8 +34,8 @@ public class MemoAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        WriteMemoItem item = items.get(position);
-        WriteMemoItemView view = new WriteMemoItemView(context);
+        MemoItem item = items.get(position);
+        MemoItemView view = new MemoItemView(context);
 
         view.setTitle(item.getTitle());
         view.setDate(item.getDate());
@@ -47,10 +48,16 @@ public class MemoAdapter extends BaseAdapter {
             view.setVideoAlpha(1);
         }
 
+        PHOTO_fILE = item.getPHOTO_FILE();
+
+        if(!PHOTO_fILE.equals("null")) {
+            view.setPhoto(PHOTO_fILE);
+        }
+
         return view;
     }
 
-    public void addItem(WriteMemoItem item) {
+    public void addItem(MemoItem item) {
         items.add(item);
     }
 }

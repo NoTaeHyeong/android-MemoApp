@@ -1,10 +1,7 @@
 package org.techtown.practice04;
 
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,15 +12,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.Date;
-import java.util.List;
 
 public class StartView extends Fragment {
 
     private String TABLE_NAME = "employee";
-    private String DATABASE = "Fu.db";
+    private String DATABASE = "MemoFinal.db";
 
     ListView listView;
     MemoAdapter adapter;
@@ -32,7 +27,9 @@ public class StartView extends Fragment {
     SQLiteDatabase db;
 
     Button newMemo;
-    String title, date, AUDIO_FILE, VIDEO_FILE;
+    String title, date;
+    String AUDIO_FILE, VIDEO_FILE, PHOTO_FILE;
+
     int id;
 
     @Nullable
@@ -67,7 +64,7 @@ public class StartView extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                WriteMemoItem item = (WriteMemoItem) parent.getItemAtPosition(position);
+                MemoItem item = (MemoItem) parent.getItemAtPosition(position);
 
                 MainActivity activity = (MainActivity) getActivity();
                 activity.toUpdateDelete(item.getId());
@@ -78,7 +75,7 @@ public class StartView extends Fragment {
     }
 
     public void Select() {
-        Cursor c1 = db.rawQuery("select id, title, date, audiofile, videofile from " + TABLE_NAME, null);
+        Cursor c1 = db.rawQuery("select id, title, date, audiofile, videofile, photofile from " + TABLE_NAME, null);
         int rowCnt = c1.getCount();
 
         for(int i=0; i<rowCnt; i++) {
@@ -89,8 +86,9 @@ public class StartView extends Fragment {
             date = c1.getString(2);
             AUDIO_FILE = c1.getString(3);
             VIDEO_FILE = c1.getString(4);
+            PHOTO_FILE = c1.getString(5);
 
-            adapter.addItem(new WriteMemoItem(id, title, date, AUDIO_FILE, VIDEO_FILE));
+            adapter.addItem(new MemoItem(id, title, date, AUDIO_FILE, VIDEO_FILE, PHOTO_FILE));
         }
 
         c1.close();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffffff">
@@ -87,29 +88,12 @@
         android:text="영상확인" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/video"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/button9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/title"
-        android:layout_alignTop="@+id/button8"
-        android:layout_toEndOf="@+id/button8"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/button10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button8"
-        android:layout_toEndOf="@+id/title"
-        android:text="Button" />
+        android:text="사진찍기" />
 
     <EditText
         android:id="@+id/recordName"
@@ -133,10 +117,10 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/photoName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/button8"
+        android:layout_alignTop="@+id/photo"
         android:layout_toEndOf="@+id/recordPlay"
         android:hint="파일명"
         android:ems="5"
@@ -145,10 +129,18 @@
     <FrameLayout
         android:id="@+id/videoLayout"
         android:layout_width="200dp"
-        android:layout_height="100dp"
+        android:layout_height="95dp"
         android:layout_below="@+id/title"
         android:visibility="invisible"
         android:layout_toEndOf="@+id/content">
 
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/getPhoto"
+        android:layout_width="200dp"
+        android:layout_height="95dp"
+        android:scaleType="fitXY"
+        android:layout_alignBottom="@+id/content"
+        android:layout_toEndOf="@+id/content" />
 </RelativeLayout>
