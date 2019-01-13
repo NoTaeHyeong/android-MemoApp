@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffffff">
-
+    android:background="@drawable/startbackground"
+    >
 
     <EditText
         android:id="@+id/title"
@@ -14,6 +14,8 @@
         android:layout_alignParentTop="true"
         android:ems="8"
         android:hint="제목"
+        android:textColor="#ffffffff"
+        android:textColorHint="#f0f0f0f0"
         android:inputType="textPersonName" />
 
     <EditText
@@ -23,6 +25,8 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/title"
         android:hint="내용을 작성하세요."
+        android:textColor="#ffffffff"
+        android:textColorHint="#f0f0f0f0"
         android:inputType="textMultiLine" />
 
     <Button
@@ -30,8 +34,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/functionbutton"
+        android:text="저장"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="70dp"
+        android:textColor="#ffffffff" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/restore"
+        android:layout_alignBottom="@+id/restore"
         android:layout_alignParentEnd="true"
-        android:text="저장" />
+        android:layout_alignParentRight="true"
+        android:background="@drawable/functionbutton"
+        android:text="취소"
+        android:layout_marginEnd="70dp"
+        android:textColor="#ffffffff" />
 
     <Button
         android:id="@+id/record"
@@ -39,28 +60,37 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/recordbutton"
+        android:textColor="#ffffffff"
+        android:layout_marginStart="5dp"
         android:text="녹음" />
 
     <Button
         android:id="@+id/recordStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/title"
-        android:layout_alignRight="@+id/record"
-        android:layout_below="@+id/content"
+        android:layout_alignBaseline="@+id/record"
+        android:layout_alignBottom="@+id/record"
         android:layout_toEndOf="@+id/record"
-        android:layout_marginTop="50dp"
-        android:text="녹음중지" />
+        android:layout_toRightOf="@+id/record"
+        android:background="@drawable/recordbutton"
+        android:text="녹음중지"
+        android:layout_marginStart="15dp"
+        android:textColor="#ffffffff" />
 
     <Button
         android:id="@+id/recordPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/content"
-        android:layout_toEndOf="@+id/title"
-        android:layout_marginTop="50dp"
-        android:text="음성확인" />
+        android:layout_alignBaseline="@+id/recordStop"
+        android:layout_alignBottom="@+id/recordStop"
+        android:layout_toEndOf="@+id/recordStop"
+        android:layout_toRightOf="@+id/recordStop"
+        android:background="@drawable/recordbutton"
+        android:text="음성확인"
+        android:layout_marginStart="15dp"
+        android:textColor="#ffffffff" />
 
     <Button
         android:id="@+id/video"
@@ -68,24 +98,37 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/record"
+        android:background="@drawable/videobutton"
+        android:textColor="#ffffffff"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
         android:text="녹화" />
 
     <Button
         android:id="@+id/videoStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/title"
-        android:layout_alignTop="@+id/video"
+        android:layout_alignBaseline="@+id/video"
+        android:layout_alignBottom="@+id/video"
         android:layout_toEndOf="@+id/video"
-        android:text="녹화중지" />
+        android:layout_toRightOf="@+id/video"
+        android:background="@drawable/videobutton"
+        android:text="녹화중지"
+        android:layout_marginStart="15dp"
+        android:textColor="#ffffffff" />
 
     <Button
         android:id="@+id/videoPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/video"
-        android:layout_toEndOf="@+id/title"
-        android:text="영상확인" />
+        android:layout_alignBaseline="@+id/videoStop"
+        android:layout_alignBottom="@+id/videoStop"
+        android:layout_toEndOf="@+id/videoStop"
+        android:layout_toRightOf="@+id/videoStop"
+        android:background="@drawable/videobutton"
+        android:text="영상확인"
+        android:layout_marginStart="15dp"
+        android:textColor="#ffffffff" />
 
     <Button
         android:id="@+id/photo"
@@ -93,38 +136,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/video"
+        android:background="@drawable/photobutton"
+        android:textColor="#ffffffff"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
         android:text="사진찍기" />
-
-    <EditText
-        android:id="@+id/recordName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/content"
-        android:layout_toEndOf="@+id/recordPlay"
-        android:hint="파일명"
-        android:ems="5"
-        android:layout_marginTop="50dp"
-        android:inputType="textPersonName" />
-
-    <EditText
-        android:id="@+id/videoName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/video"
-        android:layout_toEndOf="@+id/recordPlay"
-        android:ems="5"
-        android:hint="파일명"
-        android:inputType="textPersonName" />
-
-    <EditText
-        android:id="@+id/photoName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/photo"
-        android:layout_toEndOf="@+id/recordPlay"
-        android:hint="파일명"
-        android:ems="5"
-        android:inputType="textPersonName" />
 
     <FrameLayout
         android:id="@+id/videoLayout"
@@ -143,4 +159,5 @@
         android:scaleType="fitXY"
         android:layout_alignBottom="@+id/content"
         android:layout_toEndOf="@+id/content" />
+
 </RelativeLayout>

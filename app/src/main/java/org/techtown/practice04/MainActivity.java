@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
         db.execSQL("delete from " + TABLE_NAME + " Where id = " + id);
     }
 
+    public void toStartView() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, startView).commit();
+    }
+
     public void toWriteMemo() {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, writeMemo).commit();
     }

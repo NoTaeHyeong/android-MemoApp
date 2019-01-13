@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class MemoAdapter extends BaseAdapter {
     ArrayList<MemoItem> items = new ArrayList<>();
-    String title, date;
+    String title;
     String PHOTO_fILE;
     Context context;
 
@@ -37,7 +37,14 @@ public class MemoAdapter extends BaseAdapter {
         MemoItem item = items.get(position);
         MemoItemView view = new MemoItemView(context);
 
-        view.setTitle(item.getTitle());
+        title = item.getTitle();
+
+        if(title.equals("")) {
+            view.setTitle("제목없음");
+        } else {
+            view.setTitle(title);
+        }
+
         view.setDate(item.getDate());
 
         if(!item.getAUDIO_FILE().equals("null")) {

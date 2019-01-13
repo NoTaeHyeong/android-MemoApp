@@ -43,7 +43,9 @@ public class UpdateDelete extends Fragment {
 
     TextView titleView, dateView, contentView;
 
-    Button update, delete, recordPlay, videoPlay;
+    Button update, delete, cancel;
+    Button recordPlay, videoPlay;
+
     FrameLayout videoView;
     SurfaceView surface;
     SurfaceHolder holder; // 미리보기 클래스
@@ -100,11 +102,15 @@ public class UpdateDelete extends Fragment {
 
         update = rootView.findViewById(R.id.update);
         delete = rootView.findViewById(R.id.delete);
+        cancel = rootView.findViewById(R.id.cancel);
+
         recordPlay = rootView.findViewById(R.id.recordPlay);
         videoPlay = rootView.findViewById(R.id.videoPlay);
 
         update.setOnClickListener(new UpdateEvent());
         delete.setOnClickListener(new DeleteEvent());
+        cancel.setOnClickListener(new CancelEvent());
+
         recordPlay.setOnClickListener(new RecordPlayEvent());
         videoPlay.setOnClickListener(new VideoPlayEvent());
 
@@ -122,6 +128,13 @@ public class UpdateDelete extends Fragment {
         @Override
         public void onClick(View v) {
             activity.delete(id);
+        }
+    }
+
+    class CancelEvent implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            activity.toStartView();
         }
     }
 

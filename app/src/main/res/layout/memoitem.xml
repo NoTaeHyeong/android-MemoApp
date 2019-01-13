@@ -3,60 +3,60 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ecf184">
+    >
 
     <ImageView
         android:id="@+id/photo"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:scaleType="fitXY"
-        />
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignTop="@+id/video"
+        android:layout_toEndOf="@+id/record"
+        android:layout_marginStart="10dp"
+        android:scaleType="fitXY" />
 
     <ImageView
         android:id="@+id/video"
-        android:layout_width="50dp"
-        android:layout_height="65dp"
-        android:layout_marginTop="15dp"
-        android:layout_alignBottom="@+id/photo"
-        android:layout_below="@+id/dateView"
-        android:layout_marginEnd="5dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/titleView"
+        android:layout_marginTop="66dp"
         android:alpha="0.5"
-        android:src="@drawable/video"/>
+        android:scaleType="fitXY"
+        android:src="@drawable/videoicon" />
 
     <ImageView
         android:id="@+id/record"
-        android:layout_width="50dp"
-        android:layout_height="65dp"
-        android:layout_alignBottom="@+id/photo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_alignTop="@+id/video"
         android:layout_toEndOf="@+id/video"
+        android:layout_marginStart="10dp"
         android:alpha="0.5"
-        android:src="@drawable/record" />
+        android:scaleType="fitXY"
+        android:src="@drawable/recordicon" />
 
     <TextView
         android:id="@+id/dateView"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_above="@+id/photo"
+        android:layout_alignParentEnd="true"
         android:text="날짜"
-        android:textColor="#3f761f"
-        android:layout_below="@+id/titleView"
+        android:layout_marginEnd="5dp"
+        android:textColor="#ffffff"
         android:textSize="18dp" />
 
     <TextView
         android:id="@+id/titleView"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:text="제목"
-        android:textColor="@color/colorAccent"
+        android:textColor="#ffffff"
         android:textSize="24dp"
-        android:textStyle="bold" />
+        />
 </RelativeLayout>

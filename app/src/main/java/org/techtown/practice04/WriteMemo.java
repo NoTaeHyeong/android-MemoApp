@@ -37,6 +37,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.techtown.util.SetDate;
+
 public class WriteMemo extends Fragment {
 
     private static final String ARG_ID = "position";
@@ -47,9 +49,9 @@ public class WriteMemo extends Fragment {
     Context context;
     SQLiteDatabase db;
 
-    EditText title, content, recordName, videoName, photoName;
+    EditText title, content;
 
-    Button restore;
+    Button restore, cancel;
 
     Button record, recordStop, recordPlay;
     Button video, videoStop, videoPlay;
@@ -104,9 +106,6 @@ public class WriteMemo extends Fragment {
         title = (EditText) rootView.findViewById(R.id.title);
         content = (EditText) rootView.findViewById(R.id.content);
 
-        recordName = rootView.findViewById(R.id.recordName);
-        videoName = rootView.findViewById(R.id.videoName);
-        photoName = rootView.findViewById(R.id.photoName);
         getPhoto = rootView.findViewById(R.id.getPhoto);
 
         if(id != 0) {
@@ -115,6 +114,9 @@ public class WriteMemo extends Fragment {
 
         restore = (Button) rootView.findViewById(R.id.restore);
         restore.setOnClickListener(new RestoreEvent());
+
+        cancel = (Button) rootView.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new CancelEvent());
 
         record = rootView.findViewById(R.id.record);
         recordStop = rootView.findViewById(R.id.recordStop);
@@ -152,7 +154,7 @@ public class WriteMemo extends Fragment {
         public void onClick(View view) {
             getTitle = title.getText().toString();
             getContent = content.getText().toString();
-            setDate();
+            getDate = SetDate.setDate();
 
             if(id == 0) { // 새 메모 작성 시
                 activity.insert(getTitle, getDate, getContent, AUDIO_FILE, VIDEO_FILE, PHOTO_FILE);
@@ -164,40 +166,48 @@ public class WriteMemo extends Fragment {
         }
     }
 
+    class CancelEvent implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if(id != 0) {
+                activity.toUpdateDelete(id);
+            } else {
+                activity.toStartView();
+            }
+        }
+    }
+
     class RecordEvent implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            String record_Name = recordName.getText().toString();
 
-            if(record_Name.equals("")) {
-                Toast.makeText(getContext().getApplicationContext(), "녹음명을 입력하세요.", Toast.LENGTH_LONG).show();
-            } else {
-                File sdcard = Environment.getExternalStorageDirectory();
-                File file = new File(sdcard, record_Name + ".mp4");
-                AUDIO_FILE = file.getAbsolutePath();
+            File sdcard = Environment.getExternalStorageDirectory();
+            File file = new File(sdcard, SetDate.setDateHour() + ".mp4");
+            AUDIO_FILE = file.getAbsolutePath();
 
-                if (recorder != null) {
-                    recorder.stop();
-                    recorder.release();
-                    recorder = null;
-                }
+            if (recorder != null) {
+                recorder.stop();
+                recorder.release();
+                recorder = null;
+            }
 
-                recorder = new MediaRecorder();
+            recorder = new MediaRecorder();
 
-                recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
 
-                recorder.setOutputFile(AUDIO_FILE);
+            recorder.setOutputFile(AUDIO_FILE);
 
-                Toast.makeText(context, "녹음 시작합니다.", Toast.LENGTH_SHORT).show();
+            Log.d("12512512", AUDIO_FILE);
 
-                try {
-                    recorder.prepare();
-                    recorder.start();
-                } catch (IOException e) {
-                    Log.d("Audio", "오디오 저장중 오류 :"+ e.getMessage());
-                }
+            Toast.makeText(context, "녹음 시작합니다.", Toast.LENGTH_SHORT).show();
+
+            try {
+                recorder.prepare();
+                recorder.start();
+            } catch (IOException e) {
+                Log.d("Audio", "오디오 저장중 오류 :"+ e.getMessage());
             }
 
         }
@@ -228,6 +238,7 @@ public class WriteMemo extends Fragment {
             Toast.makeText(context, "녹음파일을 재생합니다.", Toast.LENGTH_SHORT).show();
             player = new MediaPlayer();
             try {
+                Log.d("WriteMemo", "====" + AUDIO_FILE);
                 player.setDataSource(AUDIO_FILE);
                 player.prepare(); // 가지고 와서
                 player.start();
@@ -240,52 +251,49 @@ public class WriteMemo extends Fragment {
     class VideoEvent implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            String getVideoName = videoName.getText().toString();
 
-            if(getVideoName.equals("")) {
-                Toast.makeText(context, "녹화명을 입력하세요.", Toast.LENGTH_LONG).show();
+            frame.setVisibility(View.VISIBLE);
+            // 외부 저장 공간 ( 따로 추가한 메모리 )
+            String state = Environment.getExternalStorageState();
+            if(!state.equals(Environment.MEDIA_MOUNTED)) {
+                Log.d("Activity", "메모리 마운트 불가");
             } else {
-                frame.setVisibility(View.VISIBLE);
-                // 외부 저장 공간 ( 따로 추가한 메모리 )
-                String state = Environment.getExternalStorageState();
-                if(!state.equals(Environment.MEDIA_MOUNTED)) {
-                    Log.d("Activity", "메모리 마운트 불가");
+                video_path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            }
+
+            // 동영상 녹화
+            if(recorder == null) {
+                recorder = new MediaRecorder();
+
+                recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+                recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+                recorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+
+                String getVideoName = SetDate.setDateHour();
+
+                if(video_path == null || video_path.equals("")) {
+                    VIDEO_FILE = getVideoName + ".mp4";
                 } else {
-                    video_path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                    VIDEO_FILE = video_path + "/" + getVideoName + ".mp4";
                 }
 
-                // 동영상 녹화
-                if(recorder == null) {
-                    recorder = new MediaRecorder();
+                recorder.setOutputFile(VIDEO_FILE); // 저장될 곳
+                recorder.setPreviewDisplay(holder.getSurface()); // 미리보기
+                try {
+                    recorder.prepare(); // 준비
+                    recorder.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, "녹화 중 오류 발생:"+e.getMessage(), Toast.LENGTH_SHORT).show();
 
-                    recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                    recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-                    recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                    recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-                    recorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
-
-                    if(video_path == null || video_path.equals("")) {
-                        VIDEO_FILE = getVideoName + ".mp4";
-                    } else {
-                        VIDEO_FILE = video_path + "/" + getVideoName + ".mp4";
-                    }
-
-                    recorder.setOutputFile(VIDEO_FILE); // 저장될 곳
-                    recorder.setPreviewDisplay(holder.getSurface()); // 미리보기
-                    try {
-                        recorder.prepare(); // 준비
-                        recorder.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(context, "녹화 중 오류 발생:"+e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                        recorder.release();
-                        recorder = null;
-                    }
-
-                } else {
-                    // 녹화중인 경우 ~
+                    recorder.release();
+                    recorder = null;
                 }
+
+            } else {
+                // 녹화중인 경우 ~
             }
         }
     }
@@ -309,7 +317,7 @@ public class WriteMemo extends Fragment {
                 c.put(MediaStore.Audio.Media.ARTIST, "PSE");
                 c.put(MediaStore.Audio.Media.DISPLAY_NAME, "Sample Record");
                 c.put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis()/1000);
-                c.put(MediaStore.Audio.Media.ARTIST, "video/mp4");
+                c.put(MediaStore.Audio.Media.ARTIST, "videoicon/mp4");
                 c.put(MediaStore.Audio.Media.DATA, VIDEO_FILE);
 
                 // 녹화된 파일을 내용제공자를 이용해 동영상 목록으로 저장
@@ -343,21 +351,17 @@ public class WriteMemo extends Fragment {
     class PhotoEvent implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            String photo_Name = photoName.getText().toString();
+//            String photo_Name = photoName.getText().toString();
 
-            if(photo_Name.equals("")) {
-                Toast.makeText(context, "사진명을 입력하세요.", Toast.LENGTH_LONG).show();
-            } else {
-                File storageDir = Environment.getExternalStorageDirectory();
-                file = new File(storageDir, photo_Name);
+            File storageDir = Environment.getExternalStorageDirectory();
+            file = new File(storageDir, SetDate.setDateHour());
 
-                PHOTO_FILE = file.getAbsolutePath();
+            PHOTO_FILE = file.getAbsolutePath();
 
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
 
-                startActivityForResult(intent, 100); // 실행 후 결과, 자동 onActivityResult() 호출됨
-            }
+            startActivityForResult(intent, 100); // 실행 후 결과, 자동 onActivityResult() 호출됨
         }
     }
 
@@ -366,12 +370,6 @@ public class WriteMemo extends Fragment {
         super.onDestroy();
 
         id = 0; // id 값 초기화
-    }
-
-    public void setDate() {
-        Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        getDate = dateFormat.format(date);
     }
 
     public void updateView() {
@@ -390,9 +388,6 @@ public class WriteMemo extends Fragment {
     public void textInit() {
         title.setText("");
         content.setText("");
-        recordName.setText("");
-        videoName.setText("");
-        photoName.setText("");
 
         AUDIO_FILE = "null";
         VIDEO_FILE = "null";

@@ -18,7 +18,9 @@ import java.util.Date;
 public class StartView extends Fragment {
 
     private String TABLE_NAME = "employee";
-    private String DATABASE = "MemoFinal.db";
+    private String DATABASE = "MemoF.db";
+
+    MainActivity activity;
 
     ListView listView;
     MemoAdapter adapter;
@@ -38,10 +40,7 @@ public class StartView extends Fragment {
         if(db == null) {
             openDatabase();
         }
-
-        Date date = new Date();
-
-        Log.d("StartView", date.toString());
+        activity = (MainActivity) getActivity();
 
         View rootView = (View) inflater.inflate(R.layout.startview, container, false);
 
@@ -50,13 +49,12 @@ public class StartView extends Fragment {
 
         listView.setAdapter(adapter);
 
-        Select();
+        showListView(); // db에서 데이터 가져와서 리스트뷰에 추가해서 보여줌
 
         newMemo = (Button) rootView.findViewById(R.id.newMemo);
         newMemo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity activity = (MainActivity) getActivity();
                 activity.toWriteMemo();
             }
         });
@@ -66,7 +64,6 @@ public class StartView extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MemoItem item = (MemoItem) parent.getItemAtPosition(position);
 
-                MainActivity activity = (MainActivity) getActivity();
                 activity.toUpdateDelete(item.getId());
             }
         });
@@ -74,7 +71,7 @@ public class StartView extends Fragment {
         return rootView;
     }
 
-    public void Select() {
+    public void showListView() { // db에서 데이터 가져와서 리스트뷰에 추가해서 보여줌
         Cursor c1 = db.rawQuery("select id, title, date, audiofile, videofile, photofile from " + TABLE_NAME, null);
         int rowCnt = c1.getCount();
 
