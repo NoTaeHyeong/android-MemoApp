@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 새 객체 생성시에 db가 달라져서 오류!
         startView = (StartView) getSupportFragmentManager().findFragmentById(R.id.startView);
+
         writeMemo = new WriteMemo();
         updateDelete = new UpdateDelete();
 
